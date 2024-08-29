@@ -1,4 +1,6 @@
-﻿namespace MinimalAPI.Models.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace MinimalAPI.Models.DTOs
 {
     public class CouponDTO
     {

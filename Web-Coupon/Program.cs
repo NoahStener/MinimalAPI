@@ -14,7 +14,7 @@ namespace Web_Coupon
 
 
 
-            builder.Services.AddHttpClient<IBaseService, BaseService>();
+            builder.Services.AddHttpClient();
 
             //Tror vi behöver denna
             builder.Services.AddScoped<ICouponService, CouponService>();

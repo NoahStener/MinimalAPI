@@ -27,7 +27,7 @@ namespace Web_Coupon.Services
             return await this.SendAsync<T>(new Models.ApiRequest
             {
                 apiType = StaticDetails.ApiType.DELETE,
-                Url = StaticDetails.CouponApiBase + "/api/coupon/" + id,
+                Url = StaticDetails.CouponApiBase + "/api/coupon" + id,
                 AccessToken = ""
             });
         }
@@ -51,7 +51,7 @@ namespace Web_Coupon.Services
             return await this.SendAsync<T>(new Models.ApiRequest()
             {
                 apiType = StaticDetails.ApiType.GET,
-                Url = StaticDetails.CouponApiBase + "/api/coupon/" + id,
+                Url = StaticDetails.CouponApiBase + "/api/coupon" + id,
                 AccessToken = ""
             });
         }

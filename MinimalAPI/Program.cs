@@ -141,7 +141,7 @@ namespace MinimalAPI
 
 
             //Delete endpoint 
-            app.MapDelete("api/coupon/{id:int}", (int id) =>
+            app.MapDelete("/api/coupon{id:int}", (int id) =>
             {
                 APIResponse response = new() { IsSuccess = false, StatusCode = System.Net.HttpStatusCode.BadRequest };
                 Coupon couponFromStore = CouponStore.couponList.FirstOrDefault(c => c.ID == id);

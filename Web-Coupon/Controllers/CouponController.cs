@@ -36,7 +36,7 @@ namespace Web_Coupon.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            CouponDTO cDTO = new CouponDTO();
+            //CouponDTO cDTO = new CouponDTO();
 
             var respons = await _couponService.GetCouponById<ResponseDTO>(id);
 
@@ -122,7 +122,7 @@ namespace Web_Coupon.Controllers
                     return RedirectToAction(nameof(CouponIndex));
                 }
             }
-            return NotFound();
+            return RedirectToAction(nameof(CouponIndex));
         }
     }
 }

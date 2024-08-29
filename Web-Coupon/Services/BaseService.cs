@@ -20,7 +20,7 @@ namespace Web_Coupon.Services
         {
             try
             {
-                var client = _httpClient.CreateClient("SUT23CouponAPI");
+                var client = _httpClient.CreateClient("SUT23CouponApi");
 
                 HttpRequestMessage message = new HttpRequestMessage();
                 message.Headers.Add("Accept", "application/json");
