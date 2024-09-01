@@ -3,8 +3,10 @@ using AutoMapper;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using MinimalAPI.Data;
+using MinimalAPI.EndPoint;
 using MinimalAPI.Models;
 using MinimalAPI.Models.DTOs;
+using MinimalAPI.Repository;
 
 namespace MinimalAPI
 {
@@ -28,6 +30,7 @@ namespace MinimalAPI
             builder.Services.AddDbContext<AppDbContext>(options => 
             options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionToDB")));
 
+            builder.Services.AddScoped<ICouponRepository, CouponRepository>();
 
             var app = builder.Build();
 
@@ -43,66 +46,66 @@ namespace MinimalAPI
             app.UseAuthorization();
 
             //Endpoint som hämtar alla kuponger
-            app.MapGet("/api/coupons", () =>
-            {
-                APIResponse response = new APIResponse();
-                response.Result = CouponStore.couponList;
-                response.IsSuccess = true;
-                response.StatusCode = System.Net.HttpStatusCode.OK;
+            //app.MapGet("/api/coupons", () =>
+            //{
+            //    APIResponse response = new APIResponse();
+            //    response.Result = CouponStore.couponList;
+            //    response.IsSuccess = true;
+            //    response.StatusCode = System.Net.HttpStatusCode.OK;
 
 
-                return Results.Ok(response);
-            }).WithName("GetCoupons").Produces(200);
+            //    return Results.Ok(response);
+            //}).WithName("GetCoupons").Produces(200);
 
             
 
             //Hämta en kupong med ID
-            app.MapGet("/api/coupon{id:int}", (int id) =>
-            {
-                APIResponse response = new APIResponse();
+            //app.MapGet("/api/coupon{id:int}", (int id) =>
+            //{
+            //    APIResponse response = new APIResponse();
 
-                response.Result = CouponStore.couponList.FirstOrDefault(c => c.ID == id);
-                response.IsSuccess = true;
-                response.StatusCode = System.Net.HttpStatusCode.OK;
+            //    response.Result = CouponStore.couponList.FirstOrDefault(c => c.ID == id);
+            //    response.IsSuccess = true;
+            //    response.StatusCode = System.Net.HttpStatusCode.OK;
 
-                return Results.Ok(response);
+            //    return Results.Ok(response);
 
-            }).WithName("GetCoupon").Produces(200);
+            //}).WithName("GetCoupon").Produces(200);
 
 
             
             //Post endpoint med validering och mapper
-            app.MapPost("/api/coupon", async (IValidator<CouponCreateDTO> validator, IMapper _mapper, CouponCreateDTO coupon_C_DTO) =>
-            {
+            //app.MapPost("/api/coupon", async (IValidator<CouponCreateDTO> validator, IMapper _mapper, CouponCreateDTO coupon_C_DTO) =>
+            //{
 
-                APIResponse response = new() { IsSuccess = false, StatusCode=System.Net.HttpStatusCode.BadRequest };
+            //    APIResponse response = new() { IsSuccess = false, StatusCode=System.Net.HttpStatusCode.BadRequest };
 
-                var validatorResult = await validator.ValidateAsync(coupon_C_DTO);
+            //    var validatorResult = await validator.ValidateAsync(coupon_C_DTO);
 
-                if(!validatorResult.IsValid)
-                {
-                    return Results.BadRequest(response);
-                }
-                if(CouponStore.couponList.FirstOrDefault(c => c.Name.ToLower() == coupon_C_DTO.Name.ToLower()) != null)
-                {
-                    response.ErrorMessages.Add("Coupon Name already exists");
-                    return Results.BadRequest(response);
-                }
+            //    if(!validatorResult.IsValid)
+            //    {
+            //        return Results.BadRequest(response);
+            //    }
+            //    if(CouponStore.couponList.FirstOrDefault(c => c.Name.ToLower() == coupon_C_DTO.Name.ToLower()) != null)
+            //    {
+            //        response.ErrorMessages.Add("Coupon Name already exists");
+            //        return Results.BadRequest(response);
+            //    }
 
-                //Med Automapper
-                Coupon coupon = _mapper.Map<Coupon>(coupon_C_DTO);
-                coupon.ID = CouponStore.couponList.OrderByDescending(c => c.ID).FirstOrDefault().ID + 1;
-                CouponStore.couponList.Add(coupon);
+            //    //Med Automapper
+            //    Coupon coupon = _mapper.Map<Coupon>(coupon_C_DTO);
+            //    coupon.ID = CouponStore.couponList.OrderByDescending(c => c.ID).FirstOrDefault().ID + 1;
+            //    CouponStore.couponList.Add(coupon);
 
-                CouponDTO couponDTO = _mapper.Map<CouponDTO>(coupon);
-                response.Result = couponDTO;
-                response.IsSuccess = true;
-                response.StatusCode = System.Net.HttpStatusCode.Created;
+            //    CouponDTO couponDTO = _mapper.Map<CouponDTO>(coupon);
+            //    response.Result = couponDTO;
+            //    response.IsSuccess = true;
+            //    response.StatusCode = System.Net.HttpStatusCode.Created;
 
-                return Results.Ok(response);
+            //    return Results.Ok(response);
 
-            }).WithName("CreateCoupon").Produces<CouponCreateDTO>(201)
-            .Accepts<APIResponse>("application/json").Produces(400);
+            //}).WithName("CreateCoupon").Produces<CouponCreateDTO>(201)
+            //.Accepts<APIResponse>("application/json").Produces(400);
 
 
             
@@ -161,10 +164,7 @@ namespace MinimalAPI
             }).WithName("DeleteCoupon");
 
 
-
-
-
-
+            app.ConfigurationCouponEndPoints();
 
             app.Run();
         }
